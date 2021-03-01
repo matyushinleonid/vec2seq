@@ -28,10 +28,10 @@ class Vec2SeqDataset(torch.utils.data.Dataset):
         print(f'max formula plus tech symbols len = {self.max_formula_plus_tech_symbols_len}')
 
     def set_field_from_different_dataset(self, dataset):
-        if set(self.abc) != set(dataset.abc):
-            raise Exception
-        if self.max_formula_plus_tech_symbols_len != dataset.max_formula_plus_tech_symbols_len:
-            raise Exception
+        # if set(self.abc) != set(dataset.abc):
+        #     raise Exception
+        # if self.max_formula_plus_tech_symbols_len != dataset.max_formula_plus_tech_symbols_len:
+        #     raise Exception
 
         self.s_to_n = dataset.s_to_n
         self.n_to_s = dataset.n_to_s
