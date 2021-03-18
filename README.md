@@ -7,18 +7,19 @@
 ## Data structure
 
 ```bash
- .
- └── vec2seq/
-     ├── data/
-     │   └── polynomes/
-     │       ├── train_formulae.txt
-     │       ├── val_formulae.txt
-     │       ├── val_formulae.txt
-     │       ├── train_gp.txt
-     │       ├── val_gp.txt
-     │       └── test_gp.txt
-     ├── ...
-     └── ...
+.
+└── vec2seq/
+    ├── data/
+    │   ├── polynomes/
+    │   │   ├── train_formulae.txt
+    │   │   ├── val_formulae.txt
+    │   │   ├── val_formulae.txt
+    │   │   ├── train_gp.txt
+    │   │   ├── val_gp.txt
+    │   │   └── test_gp.txt
+    │   └── ...
+    ├── ...
+    └── ...
 ```
 
 
@@ -42,13 +43,13 @@
 
 Training the model:
 ```bash
- python train.py --config configs/polynomes.yaml
+python train.py --config configs/polynomes.yaml
 ```
 
 Benching the model:
 
 ```bash
- python test.py --checkpoint_path logs/polynomes/default/version_0/checkpoints/epoch=0-step=0.ckpt
+python test.py --checkpoint_path logs/polynomes/default/version_0/checkpoints/epoch=0-step=0.ckpt
 ```
 
 After this you may collect an output at `logs/polynomes/default/version_0/epoch=0-step=0_output.csv` 
