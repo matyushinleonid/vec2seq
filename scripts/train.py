@@ -11,12 +11,12 @@ import yaml
 
 
 def main(cfg):
-    train_gp_csv_path = f'../data/{cfg.task}/train_gp.txt'
-    train_formulae_csv_path = f'../data/{cfg.task}/train_formulae.txt'
-    train_dataset = Vec2SeqDataset(train_gp_csv_path, train_formulae_csv_path)
-    val_gp_csv_path = f'../data/{cfg.task}/val_gp.txt'
-    val_formulae_csv_path = f'../data/{cfg.task}/val_formulae.txt'
-    val_dataset = Vec2SeqDataset(val_gp_csv_path, val_formulae_csv_path)
+    train_gps_path = f'../data/{cfg.task}/train/gps.pickle'
+    train_formulae_path = f'../data/{cfg.task}/train/formulae.pickle'
+    train_dataset = Vec2SeqDataset(train_gps_path, train_formulae_path)
+    val_gps_path = f'../data/{cfg.task}/val/gps.pickle'
+    val_formulae_path = f'../data/{cfg.task}/val/formulae.pickle'
+    val_dataset = Vec2SeqDataset(val_gps_path, val_formulae_path)
     val_dataset.set_field_from_different_dataset(train_dataset)
 
     def collate_fn(data):
@@ -24,7 +24,7 @@ def main(cfg):
         return np.stack([data[i][0] for i in range(batch_size)]), np.stack([data[i][1] for i in range(batch_size)])
 
     train_dataloader = torch.utils.data.DataLoader(
-        torch.utils.data.ConcatDataset([train_dataset]), # * 100000
+        train_dataset, # * 100000
         shuffle=True,
         batch_size=cfg.data.batch_size, # * 3
         collate_fn=collate_fn,
@@ -38,18 +38,6 @@ def main(cfg):
         collate_fn=collate_fn,
         num_workers=cfg.data.num_workers
     )
-
-    # decoder_hidden_dim = cfg.model.decoder_input_dim
-    # model = Model(encoder_input_dim=cfg.model.encoder_input_dim,
-    #               encoder_hidden_dim=cfg.model.encoder_hidden_dim,
-    #               encoder_output_dim=train_dataset.abc_len,
-    #               decoder_input_dim=cfg.model.decoder_input_dim,#train_dataset.abc_len,
-    #               decoder_hidden_dim=decoder_hidden_dim,#train_dataset.abc_len,
-    #               decoder_n_layers=cfg.model.decoder_n_layers,
-    #               decoder_output_len=train_dataset.max_formula_plus_tech_symbols_len,
-    #               lr=cfg.optimization.lr,
-    #               encoder_dropout_p=cfg.model.encoder_dropout_p,
-    #               decoder_dropout_p=cfg.model.decoder_dropout_p)
 
     model = Model(cfg=cfg,
                   abc_len=train_dataset.abc_len,
@@ -75,8 +63,8 @@ def main(cfg):
 
 
     if cfg.trainer.run_on_gpus:
-        gpus = -1
-        distributed_backend = 'ddp'
+        gpus = [3]
+        distributed_backend = None #'ddp'
     else:
         gpus = None
         distributed_backend = None
@@ -95,6 +83,7 @@ def main(cfg):
     )
 
 def get_cfg(**kwargs):
+    kwargs['config'] = './configs/toy_example.yaml'
     with open(kwargs['config'], 'r') as stream:
         cfg = yaml.safe_load(stream)
     kwargs.pop('config')

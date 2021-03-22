@@ -2,17 +2,19 @@ import pandas as pd
 import numpy as np
 import torch.utils.data
 import torch
+import pickle
 
 
 class Vec2SeqDataset(torch.utils.data.Dataset):
-    def __init__(self, gp_csv_path, formulae_csv_path):
+    def __init__(self, gps_path, formulae_path):
         self.tech_symbols = ['<init>', '<pad>', '<eos>']
 
-        gp_csv = pd.read_csv(gp_csv_path, header=None).set_index(0)
-        formulae_csv = pd.read_csv(formulae_csv_path, header=None).set_index(0)
-
-        self.formulae = formulae_csv[1].str.split(' ').values
-        self.gp = gp_csv.values.tolist()
+        with open(gps_path, 'rb') as f:
+            gp_csv = pd.DataFrame(pickle.load(f))['ys_eval']
+            self.gp = gp_csv.values.tolist()
+        with open(formulae_path, 'rb') as f:
+            formulae_csv = pd.DataFrame(pickle.load(f))['prefix_expr']
+            self.formulae = formulae_csv.values.tolist()
 
         self.abc = np.unique(np.concatenate(self.formulae)).tolist()
         self.abc += self.tech_symbols
@@ -33,6 +35,8 @@ class Vec2SeqDataset(torch.utils.data.Dataset):
         # if self.max_formula_plus_tech_symbols_len != dataset.max_formula_plus_tech_symbols_len:
         #     raise Exception
 
+        self.max_formula_len = dataset.max_formula_len
+        self.max_formula_plus_tech_symbols_len = dataset.max_formula_plus_tech_symbols_len
         self.s_to_n = dataset.s_to_n
         self.n_to_s = dataset.n_to_s
 

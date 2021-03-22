@@ -1,0 +1,40 @@
+meta:
+  size:
+    train: 1500000
+    val: 100000
+    test: 100000
+
+formulae_env:
+  env_name: char_sp
+  int_base: 10
+  balanced: False
+  positive: True
+  precision: 10
+  n_variables: 1
+  n_coefficients: 0
+  leaf_probs: 0.75,0,0.25,0
+  max_len: 512
+  max_int: 5
+  max_ops: 15
+  max_ops_G: 100500
+  clean_prefix_expr: True
+  rewrite_functions: ''
+  tasks: prim_fwd
+  operators: add:10,sub:3,mul:10,pow2:4,pow3:2
+formulae_other:
+  min_ops: 5
+gp:
+  x_min: -5.0
+  x_max: 5.0
+  n_points: 200
+numeric:
+  x_min: -5.0
+  x_max: 5.0
+  n_points_min:
+    train: 5
+    val: 80
+    test: 80
+  n_points_max:
+    train: 100
+    val: 80
+    test: 80

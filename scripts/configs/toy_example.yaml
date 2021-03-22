@@ -1,8 +1,8 @@
 experiment_name: noname
-task: polynomes
+task: toy_example
 data:
   batch_size: 50000
-  num_workers: 44
+  num_workers: 0 #44
 model:
   encoder_input_dim: 200
   encoder_hidden_dim: 512
@@ -14,10 +14,10 @@ optimization:
   lr: 0.0001
 early_stopping:
   min_delta: 0.0
-  patience: 30
+  patience: 300
 checkpointing:
   save_top_k: 1
 trainer:
   run_on_gpus: True
-  min_epochs: 1 # 1000
-  max_epochs: 1 # 30000
+  min_epochs: 10000 # 1000
+  max_epochs: 100000000 # 30000
